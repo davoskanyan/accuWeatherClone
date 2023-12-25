@@ -11,6 +11,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.rt-PopperContent, .rt-BaseMenuContent[data-state='open'] {
+  border-top: 3px solid rgb(240, 85, 20) ;
+  border-radius: 0 0 3px 3px;
+}
+
+.rt-TextFieldRoot
+{
+  z-index: 40 !important;
+}
+
+.rt-BaseMenuViewport{
+  padding: 0 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
