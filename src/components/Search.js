@@ -1,79 +1,17 @@
 import { DropdownMenu, TextField } from '@radix-ui/themes';
 import SearchIcon from '../icons/searchIcon.svg';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const API_KEY = '6FsuZ4vrEMOvcJ9zVWUDlpNqvZugPH0y';
-
-function Search() {
-  const [city] = useState('yerevan');
-  const [locationKey, setLocationKey] = useState('');
-  const [isLoading, setIsLoading] = useState('false');
-  const [searchValue, setSearchValue] = useState('');
-  const [searchOptions, setSearchOptions] = useState([]);
+function Search({
+  setSearchValue,
+  searchValue,
+  error,
+  isLoading,
+  searchOptions,
+  setCity,
+}) {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    async function getLocationKey() {
-      try {
-        setIsLoading('true');
-        const res = await fetch(
-          `http://dataservice.accuweather.com/locations/v1/cities/search?apikey=${API_KEY}&q=${city}`,
-        );
-        const data = await res.json();
-        setLocationKey(data[0].Key);
-      } catch (e) {
-        setError('Cannot fetch data');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    getLocationKey();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    async function getForecastbyLoactionKey() {
-      if (!locationKey) return;
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://dataservice.accuweather.com/forecasts/v1/daily/1day/${locationKey}/?apikey=${API_KEY}`,
-        );
-        const data = await res.json();
-        console.log('data:', data);
-      } catch (e) {
-        setError('Cannot fetch data');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    getForecastbyLoactionKey();
-  }, [locationKey]);
-
-  useEffect(() => {
-    async function fetchAutocomplete() {
-      if (searchValue === null) return;
-      if (searchValue.length < 2) return;
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${searchValue}`,
-        );
-        const data = await res.json();
-        setSearchOptions(data);
-        console.log('autocomplete:', data);
-      } catch (e) {
-        setError('Cannot fetch data');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchAutocomplete();
-  }, [searchValue]);
 
   function handleInputChange(e) {
     setOpen(true);
@@ -86,8 +24,9 @@ function Search() {
     }
   }
 
-  function handleSelect() {
+  function handleSelect(city) {
     setOpen(false);
+    setCity(city);
   }
 
   return (
@@ -123,20 +62,21 @@ function Search() {
               <DropdownMenu.Item>Loading...</DropdownMenu.Item>
             ) : (
               searchOptions?.map((city) => (
-                <DropdownMenu.Item
-                  onSelect={() => handleSelect()}
-                  autoFocus={false}
-                  key={city.key}
-                  className="dropdown-item data-[highlighted]:bg-stone-100 data-[highlighted]:text-black py-6"
-                >
-                  <div className="flex flex-col ">
-                    <span className=" font-bold">{city.LocalizedName}</span>
-                    <span className="text-stone-500">
-                      {city.AdministrativeArea.LocalizedName},{' '}
-                      {city.AdministrativeArea.ID} {city.Country.ID}
-                    </span>
-                  </div>
-                </DropdownMenu.Item>
+                <Link to={`/${city.LocalizedName}`} key={city.key}>
+                  <DropdownMenu.Item
+                    onSelect={() => handleSelect(city)}
+                    autoFocus={false}
+                    className="dropdown-item data-[highlighted]:bg-stone-100 data-[highlighted]:text-black py-6"
+                  >
+                    <div className="flex flex-col ">
+                      <span className=" font-bold">{city.LocalizedName}</span>
+                      <span className="text-stone-500">
+                        {city.AdministrativeArea.LocalizedName},{' '}
+                        {city.AdministrativeArea.ID} {city.Country.ID}
+                      </span>
+                    </div>
+                  </DropdownMenu.Item>
+                </Link>
               ))
             )}
           </DropdownMenu.Group>
