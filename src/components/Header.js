@@ -1,26 +1,29 @@
 import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
-import React from 'react';
 import SunIcon from '../icons/1.svg';
-import Search from './Search';
 
 function Header() {
   return (
-    <div>
-      <img className="h-fit" src={accuWeatherLogo} />
-
-      <div>
-        <span>Yerevan, Yerevan </span>
-        <span className="text-[30px]">
-          3°
-          <span className="opacity-50 text-[12px] relative left-[-10px]">
-            C
+    <div className="h-[62px] text-white flex flex-row bg-[#1f1f1f]">
+      <div className="px-20 items-center flex justify-center">
+        <img
+          alt="logo"
+          className="h-[24px] px-5 items-center"
+          src={accuWeatherLogo}
+        />
+        <div className="flex flex-row h-fit justify-around items-center">
+          <h1 className="mx-3">Yerevan, Yerevan </h1>
+          <span className="text-[18px]">
+            3°
+            <span className="opacity-50 text-[10px] relative left-[-6px]">
+              C
+            </span>
           </span>
-        </span>
-        <img className="h-[32px] w-[32px]" src={SunIcon} />
+          <img className="h-[25px] w-[25px]" src={SunIcon} />
+        </div>
       </div>
-      <div>
-        <Search />
-      </div>
+      {/*<div className="h-fit">*/}
+      {/*  <Search />*/}
+      {/*</div>*/}
     </div>
   );
 }

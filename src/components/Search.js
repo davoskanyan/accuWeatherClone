@@ -9,7 +9,6 @@ function Search({
   error,
   isLoading,
   searchOptions,
-  setCity,
 }) {
   const [open, setOpen] = useState(false);
 
@@ -24,9 +23,8 @@ function Search({
     }
   }
 
-  function handleSelect(city) {
+  function handleSelect() {
     setOpen(false);
-    setCity(city);
   }
 
   return (
@@ -62,9 +60,9 @@ function Search({
               <DropdownMenu.Item>Loading...</DropdownMenu.Item>
             ) : (
               searchOptions?.map((city) => (
-                <Link to={`/${city.LocalizedName}`} key={city.key}>
+                <Link to={`/${city.Key}/${city.LocalizedName}`} key={city.Key}>
                   <DropdownMenu.Item
-                    onSelect={() => handleSelect(city)}
+                    onSelect={() => handleSelect()}
                     autoFocus={false}
                     className="dropdown-item data-[highlighted]:bg-stone-100 data-[highlighted]:text-black py-6"
                   >

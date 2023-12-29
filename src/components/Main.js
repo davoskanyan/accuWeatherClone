@@ -10,13 +10,10 @@ function Main({
   error,
   isLoading,
   searchOptions,
-  setCity,
 }) {
   const [bgImageNumber] = useState(1);
   const BG_IMAGE_URL = `url("https://www.awxcdn.com/adc-assets/images/hero/${bgImageNumber}/1440x450.jpg")`;
-  // useEffect(() => {
-  //   setBgImageNumber((prev) => if(prev!== 6)
-  // }, []);
+
   return (
     <div
       style={{
@@ -36,7 +33,6 @@ function Main({
           error={error}
           isLoading={isLoading}
           searchOptions={searchOptions}
-          setCity={setCity}
         />
         <RecentSearch />
       </div>
