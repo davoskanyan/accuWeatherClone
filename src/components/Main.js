@@ -14,6 +14,11 @@ function Main({
   const [bgImageNumber] = useState(1);
   const BG_IMAGE_URL = `url("https://www.awxcdn.com/adc-assets/images/hero/${bgImageNumber}/1440x450.jpg")`;
 
+  function onSearchChange(newSearch) {
+    // TODO: fetch here with debounce/throttle
+    setSearchValue(newSearch);
+  }
+
   return (
     <div
       style={{
@@ -28,7 +33,9 @@ function Main({
       </Link>
       <div className="flex flex-col items-center justify-around h-full w-full">
         <Search
-          setSearchValue={setSearchValue}
+          // TODO: rename onChange
+          setSearchValue={onSearchChange}
+          // value
           searchValue={searchValue}
           error={error}
           isLoading={isLoading}

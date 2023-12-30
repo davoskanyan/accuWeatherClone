@@ -8,24 +8,28 @@ import PageNotFound from './pages/PageNotFound';
 const API_KEY = '6FsuZ4vrEMOvcJ9zVWUDlpNqvZugPH0y';
 
 function App() {
-  const [isLoading, setIsLoading] = useState('false');
+  // TODO: move everything to main
+  const [isLoading, setIsLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchOptions, setSearchOptions] = useState([]);
   const [error, setError] = useState('');
 
+  // TODO
+  // status can be [idle, loading, success, error]
+  // fetch will start when you call the trigger function
+  // const {data, status, error, trigger} = useFetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${searchValue})
+
   useEffect(() => {
     async function fetchAutocomplete() {
-      if (searchValue === null) return;
-      if (searchValue.length < 2) return;
+      if (searchValue.length < 2) return; // TODO: clear results
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         const res = await fetch(
           `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${searchValue}`,
         );
         const data = await res.json();
         setSearchOptions(data);
-        console.log('autocomplete:', data);
-      } catch (e) {
+      } catch {
         setError('Cannot fetch data');
       } finally {
         setIsLoading(false);
@@ -36,6 +40,7 @@ function App() {
   }, [searchValue]);
 
   return (
+    // TODO: remove if unnecessary
     <div className="h-100">
       <Routes>
         <Route path="/:id/:city" element={<ForecastInfo />} />
