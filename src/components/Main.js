@@ -3,26 +3,25 @@ import Search from './Search';
 import RecentSearch from './RecentSearch';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useFetch from '../custom-hooks/useFetch';
+import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
 
-function Main({
-  setSearchValue,
-  searchValue,
-  error,
-  isLoading,
-  searchOptions,
-}) {
-  const [bgImageNumber] = useState(1);
-  const BG_IMAGE_URL = `url("https://www.awxcdn.com/adc-assets/images/hero/${bgImageNumber}/1440x450.jpg")`;
+const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
 
-  function onSearchChange(newSearch) {
-    // TODO: fetch here with debounce/throttle
-    setSearchValue(newSearch);
-  }
+function Main() {
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedValue = useDebouncedValue(searchValue);
+
+  const [status, errorMessage, result = []] = useFetch(
+    `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${debouncedValue}`,
+    { disabled: searchValue.length <= 2 },
+  );
 
   return (
     <div
       style={{
-        backgroundImage: BG_IMAGE_URL,
+        backgroundImage:
+          'url("https://www.awxcdn.com/adc-assets/images/hero/1/1440x450.jpg")',
       }}
       className="bg-no-repeat bg-cover h-96 w-100 text-white flex-col flex"
     >
@@ -33,13 +32,11 @@ function Main({
       </Link>
       <div className="flex flex-col items-center justify-around h-full w-full">
         <Search
-          // TODO: rename onChange
-          setSearchValue={onSearchChange}
-          // value
-          searchValue={searchValue}
-          error={error}
-          isLoading={isLoading}
-          searchOptions={searchOptions}
+          value={searchValue}
+          onChange={setSearchValue}
+          error={errorMessage}
+          isLoading={status === 'isLoading'}
+          searchOptions={searchValue.length <= 2 ? [] : result}
         />
         <RecentSearch />
       </div>

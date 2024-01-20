@@ -1,7 +1,10 @@
 import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
 import SunIcon from '../icons/1.svg';
+import { useParams } from 'react-router-dom';
 
 function Header() {
+  const { city } = useParams();
+
   return (
     <div className="h-[62px] text-white flex flex-row bg-[#1f1f1f]">
       <div className="px-20 items-center flex justify-center">
@@ -11,7 +14,7 @@ function Header() {
           src={accuWeatherLogo}
         />
         <div className="flex flex-row h-fit justify-around items-center">
-          <h1 className="mx-3">Yerevan, Yerevan </h1>
+          <h1 className="mx-3">{city} </h1>
           <span className="text-[18px]">
             3°
             <span className="opacity-50 text-[10px] relative left-[-6px]">

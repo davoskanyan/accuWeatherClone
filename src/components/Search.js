@@ -3,18 +3,12 @@ import SearchIcon from '../icons/searchIcon.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Search({
-  setSearchValue,
-  searchValue,
-  error,
-  isLoading,
-  searchOptions,
-}) {
+function Search({ onChange, value, error, isLoading, searchOptions }) {
   const [open, setOpen] = useState(false);
 
   function handleInputChange(e) {
     setOpen(true);
-    setSearchValue(e.target.value);
+    onChange(e.target.value);
   }
 
   function handleInputFocus(e) {
@@ -37,7 +31,7 @@ function Search({
         <TextField.Input
           className="mx-0 my-auto border-4 z-10"
           placeholder="Search your City"
-          value={searchValue}
+          value={value}
           onBlur={(e) => handleInputFocus(e)}
           onChange={(e) => handleInputChange(e)}
           onClick={() => setOpen(true)}
