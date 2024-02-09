@@ -1,33 +1,20 @@
-function WeatherTemperatureIcon({
-  tempValue,
-  unit,
-  iconNumber,
-  iconHeight,
-  iconWidth,
-  tempValueTextSize,
-  unitPosition,
-  imgStyles,
-  tempValueStyles,
-}) {
+function Degree({ tempValue, unit, unitPosition }) {
   return (
-    <div className="flex flex-row items-end">
-      <img
-        style={imgStyles}
-        className={`h-[${iconHeight}] w-[${iconWidth}]`}
-        src={`https://www.accuweather.com/images/weathericons/${iconNumber}.svg`}
-      />
-      <div style={tempValueStyles} className={`text-[${tempValueTextSize}]`}>
-        <span>
-          {tempValue}°
-          <span
-            className={`opacity-50 text-[${tempValueTextSize}] relative left-[${unitPosition}]`}
-          >
-            {unit}
-          </span>
+    <div className="flex flex-row items-end font-light">
+      <span>
+        {tempValue}°
+        <span
+          style={{
+            left: { unitPosition },
+            fontSize: '50%',
+          }}
+          className={`opacity-50 relative `}
+        >
+          {unit}
         </span>
-      </div>
+      </span>
     </div>
   );
 }
 
-export default WeatherTemperatureIcon;
+export default Degree;

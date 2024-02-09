@@ -1,41 +1,67 @@
-function WeatherDaybyDay() {
+import SelectedDayCard from './SelectedDayCard';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { dateToMonthbyWords, dateToWeekdayDayMonth } from '../utils';
+
+function WeatherSelectedDate() {
+  const { index } = useParams();
+  const [dailyInfo, setDailyInfo] = useState({});
+
+  useEffect(() => {
+    const data = localStorage.getItem(index);
+    setDailyInfo(JSON.parse(data));
+  }, [index]);
+
+  const month = dateToMonthbyWords(dailyInfo.date);
+  const day = dateToWeekdayDayMonth(dailyInfo.date);
+  const navigate = useNavigate();
   return (
     <>
-      <div className="bg-white shadow-sm p-[12px]  w-[632px] m-8">
-        <div className="border-b-[1px] flex flex-row justify-between pb-2">
-          <p className="text-[14px] opacity-[0.6] bottom-3">Day</p>
-          <p className="opacity-[0.6] text-{14px}">2/1</p>
-        </div>
-
-        <div className="flex flex-row gap-2 items-center text-[84px] ">
-          <img
-            className={`h-[88px] w-[88px]`}
-            src={`https://www.accuweather.com/images/weathericons/${3}.svg`}
-          />
-          12
-        </div>
-
-        <p className="align-bottom">cloudy</p>
+      <div
+        className="flex justify-between mt-5 border-b-[1px] border-b-[#c2c2c2] text-[14px] py-2 ml-8 mb-[-20px]
+       w-[632px]"
+      >
+        {/* TODO: it's sad */}
+        {index != 0 ? (
+          <Link to={`../selectedDay/${Number(index) - 1}`}>{'<'}</Link>
+        ) : (
+          <div />
+        )}
+        <span className="self-center">
+          {day.weekDayOfDate}, {month} {day.day}
+        </span>
+        {index != 4 ? (
+          <button
+            className="font-bold self-end"
+            onClick={() =>
+              navigate(`../${Number(index) + 1}`, {
+                relative: 'path',
+              })
+            }
+          >
+            {' '}
+            {'>'}{' '}
+          </button>
+        ) : (
+          ''
+        )}
       </div>
-
-      <div className="bg-white shadow-sm p-[12px]  w-[632px] m-8">
-        <div className="border-b-[1px] flex flex-row justify-between pb-2">
-          <p className="text-[14px] opacity-[0.6] bottom-3">Night</p>
-          <p className="opacity-[0.6] text-{14px}">2/1</p>
-        </div>
-
-        <div className="flex flex-row gap-2 items-center text-[84px] ">
-          <img
-            className={`h-[88px] w-[88px]`}
-            src={`https://www.accuweather.com/images/weathericons/${3}.svg`}
-          />
-          14
-        </div>
-
-        <p className="align-bottom"> Rainy</p>
-      </div>
+      <SelectedDayCard
+        cardName={'Day'}
+        iconNumber={dailyInfo.dayIconNumber}
+        tempValue={dailyInfo.dayTemperature}
+        weatherText={dailyInfo.dayIconPhrase}
+        date={dailyInfo.date}
+      />
+      <SelectedDayCard
+        cardName={'Night'}
+        iconNumber={dailyInfo.nightIconNumber}
+        tempValue={dailyInfo.nightTemperature}
+        weatherText={dailyInfo.nightIconPhrase}
+        date={dailyInfo.date}
+      />
     </>
   );
 }
 
-export default WeatherDaybyDay;
+export default WeatherSelectedDate;

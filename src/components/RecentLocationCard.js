@@ -1,8 +1,24 @@
-import React from 'react';
 import { Box, Text } from '@radix-ui/themes';
-import SunIcon from '../icons/1.svg';
+import Degree from './Degree';
+import { useQuery } from '@tanstack/react-query';
+const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
 
-function RecentLocationCard({ city, country }) {
+function RecentLocationCard({ id, name }) {
+  const { data } = useQuery({
+    queryKey: ['currentConditions', id],
+    queryFn: () =>
+      fetch(
+        `https://dataservice.accuweather.com/currentconditions/v1/${id}/?apikey=${API_KEY}`,
+      ).then((response) => response.json()),
+  });
+
+  if (!data) {
+    return <span>loading...</span>;
+  }
+
+  const tempValue = Math.round(data[0].Temperature.Metric.Value);
+  const iconNumber = data[0].WeatherIcon;
+  const tempUnit = data[0].Temperature.Metric.Unit;
   return (
     <Box
       style={{
@@ -14,16 +30,14 @@ function RecentLocationCard({ city, country }) {
       }}
       className="h-32 flex flex-col"
     >
-      <Text className="text-md">{city}</Text>
-      <Text className="text-[10px]">{country}</Text>
-      <div className="flex flex-row flex-nowrap justify-start items-center gap-1">
-        <img className="h-[32px] w-[32px]" src={SunIcon} />
-        <span className="text-[30px]">
-          3°
-          <span className="opacity-50 text-[12px] relative left-[-10px]">
-            C
-          </span>
-        </span>
+      <Text className="text-md">{name}</Text>
+      {/*<Text className="text-[10px]">{country}</Text>*/}
+      <div className="text-3xl flex flex-row justify-start gap-1 items-center">
+        <img
+          className={`h-[32px] w-[32px]`}
+          src={`https://www.accuweather.com/images/weathericons/${iconNumber}.svg`}
+        />
+        <Degree tempValue={tempValue} unit={tempUnit} unitPosition="-9px" />
       </div>
     </Box>
   );

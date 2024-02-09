@@ -1,27 +1,33 @@
 import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
-import Search from './Search';
-import RecentSearch from './RecentSearch';
+import Search from '../components/Search';
+import RecentSearch from '../components/RecentSearch';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import useFetch from '../custom-hooks/useFetch';
 import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
+import { useQuery } from '@tanstack/react-query';
 
 const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
+const bgImage = Math.floor(Math.random() * 6) + 1;
 
 function Main() {
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebouncedValue(searchValue);
 
-  const [status, errorMessage, result = []] = useFetch(
-    `http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${debouncedValue}`,
-    { disabled: searchValue.length <= 2 },
-  );
+  const { data, error, status } = useQuery({
+    enabled: Boolean(searchValue.length >= 2),
+    queryKey: ['autocomplete', debouncedValue],
+    queryFn: () =>
+      fetch(
+        `https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${debouncedValue}`,
+      ).then((response) => response.json()),
+  });
 
   return (
     <div
       style={{
-        backgroundImage:
-          'url("https://www.awxcdn.com/adc-assets/images/hero/1/1440x450.jpg")',
+        backgroundImage: `url("https://www.awxcdn.com/adc-assets/images/hero/${bgImage}/1440x450.jpg")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
       }}
       className="bg-no-repeat bg-cover h-96 w-100 text-white flex-col flex"
     >
@@ -34,9 +40,9 @@ function Main() {
         <Search
           value={searchValue}
           onChange={setSearchValue}
-          error={errorMessage}
+          error={error}
           isLoading={status === 'isLoading'}
-          searchOptions={searchValue.length <= 2 ? [] : result}
+          searchOptions={searchValue.length <= 2 ? [] : data}
         />
         <RecentSearch />
       </div>

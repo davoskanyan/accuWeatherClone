@@ -1,7 +1,11 @@
 import React from 'react';
 
-function NoWeatcherYet() {
-  return <h1>No Weather Forecast Yet</h1>;
+function NoWeatherYet() {
+  return (
+    <div className="flex justify-center m-8">
+      <h1>No Weather Forecast Yet</h1>
+    </div>
+  );
 }
 
-export default NoWeatcherYet;
+export default NoWeatherYet;
