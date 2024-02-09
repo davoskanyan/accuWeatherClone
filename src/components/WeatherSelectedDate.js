@@ -1,64 +1,46 @@
 import SelectedDayCard from './SelectedDayCard';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { dateToMonthbyWords, dateToWeekdayDayMonth } from '../utils';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import DayNavigationBar from './DayNavigationBar';
+const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
 
 function WeatherSelectedDate() {
-  const { index } = useParams();
-  const [dailyInfo, setDailyInfo] = useState({});
+  const { id, index } = useParams();
 
-  useEffect(() => {
-    const data = localStorage.getItem(index);
-    setDailyInfo(JSON.parse(data));
-  }, [index]);
+  const { data } = useQuery({
+    queryKey: ['dailyForecasts', id],
+    queryFn: () =>
+      fetch(
+        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}/?apikey=${API_KEY}`,
+      ).then((response) => response.json()),
+  });
 
-  const month = dateToMonthbyWords(dailyInfo.date);
-  const day = dateToWeekdayDayMonth(dailyInfo.date);
-  const navigate = useNavigate();
+  const formattedData = {
+    date: data.DailyForecasts[index].Date,
+    dayIconNumber: data.DailyForecasts[index].Day.Icon,
+    nightIconNumber: data.DailyForecasts[index].Night.Icon,
+    dayIconPhrase: data.DailyForecasts[index].Day.IconPhrase,
+    nightIconPhrase: data.DailyForecasts[index].Night.IconPhrase,
+    dayTemperature: data.DailyForecasts[index].Temperature.Maximum.Value,
+    nightTemperature: data.DailyForecasts[index].Temperature.Minimum.Value,
+  };
+
   return (
     <>
-      <div
-        className="flex justify-between mt-5 border-b-[1px] border-b-[#c2c2c2] text-[14px] py-2 ml-8 mb-[-20px]
-       w-[632px]"
-      >
-        {/* TODO: it's sad */}
-        {index != 0 ? (
-          <Link to={`../selectedDay/${Number(index) - 1}`}>{'<'}</Link>
-        ) : (
-          <div />
-        )}
-        <span className="self-center">
-          {day.weekDayOfDate}, {month} {day.day}
-        </span>
-        {index != 4 ? (
-          <button
-            className="font-bold self-end"
-            onClick={() =>
-              navigate(`../${Number(index) + 1}`, {
-                relative: 'path',
-              })
-            }
-          >
-            {' '}
-            {'>'}{' '}
-          </button>
-        ) : (
-          ''
-        )}
-      </div>
+      <DayNavigationBar index={index} date={formattedData.date} />
       <SelectedDayCard
         cardName={'Day'}
-        iconNumber={dailyInfo.dayIconNumber}
-        tempValue={dailyInfo.dayTemperature}
-        weatherText={dailyInfo.dayIconPhrase}
-        date={dailyInfo.date}
+        iconNumber={formattedData.dayIconNumber}
+        tempValue={formattedData.dayTemperature}
+        weatherText={formattedData.dayIconPhrase}
+        date={formattedData.date}
       />
       <SelectedDayCard
         cardName={'Night'}
-        iconNumber={dailyInfo.nightIconNumber}
-        tempValue={dailyInfo.nightTemperature}
-        weatherText={dailyInfo.nightIconPhrase}
-        date={dailyInfo.date}
+        iconNumber={formattedData.nightIconNumber}
+        tempValue={formattedData.nightTemperature}
+        weatherText={formattedData.nightIconPhrase}
+        date={formattedData.date}
       />
     </>
   );

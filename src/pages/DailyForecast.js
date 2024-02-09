@@ -8,7 +8,7 @@ function DailyForecast() {
   const { id } = useParams();
 
   const { data, error, status } = useQuery({
-    queryKey: ['autocomplete', id],
+    queryKey: ['dailyForecasts', id],
     queryFn: () =>
       fetch(
         `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}/?apikey=${API_KEY}`,
@@ -34,17 +34,7 @@ function DailyForecast() {
       </p>
       {dailyForecasts.map((forecast, id) => (
         // TODO: reduce props
-        <DailyForecastCard
-          id={id}
-          key={forecast.Date}
-          date={forecast.Date}
-          iconNumber={forecast.Day.Icon}
-          weatherText={forecast.Day.IconPhrase}
-          maxTempValue={forecast.Temperature.Maximum.Value}
-          minTempValue={forecast.Temperature.Minimum.Value}
-          nightIconNumber={forecast.Night.Icon}
-          nightWeatherText={forecast.Night.IconPhrase}
-        />
+        <DailyForecastCard cardId={id} key={forecast.Date} />
       ))}
     </div>
   );
