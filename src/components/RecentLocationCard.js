@@ -1,24 +1,18 @@
 import { Box, Text } from '@radix-ui/themes';
 import Degree from './Degree';
 import { useQuery } from '@tanstack/react-query';
-const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
+import { getCurrentConditions } from '../api';
 
 function RecentLocationCard({ id, name }) {
   const { data } = useQuery({
     queryKey: ['currentConditions', id],
-    queryFn: () =>
-      fetch(
-        `https://dataservice.accuweather.com/currentconditions/v1/${id}/?apikey=${API_KEY}`,
-      ).then((response) => response.json()),
+    queryFn: () => getCurrentConditions(id),
   });
 
   if (!data) {
     return <span>loading...</span>;
   }
 
-  const tempValue = Math.round(data[0].Temperature.Metric.Value);
-  const iconNumber = data[0].WeatherIcon;
-  const tempUnit = data[0].Temperature.Metric.Unit;
   return (
     <Box
       style={{
@@ -35,9 +29,13 @@ function RecentLocationCard({ id, name }) {
       <div className="text-3xl flex flex-row justify-start gap-1 items-center">
         <img
           className={`h-[32px] w-[32px]`}
-          src={`https://www.accuweather.com/images/weathericons/${iconNumber}.svg`}
+          src={`https://www.accuweather.com/images/weathericons/${data.iconNumber}.svg`}
         />
-        <Degree tempValue={tempValue} unit={tempUnit} unitPosition="-9px" />
+        <Degree
+          tempValue={data.tempValue}
+          unit={data.tempUnit}
+          unitPosition="-9px"
+        />
       </div>
     </Box>
   );

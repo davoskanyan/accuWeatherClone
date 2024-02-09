@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
 import { useQuery } from '@tanstack/react-query';
+import { getAutocomplete } from '../api';
 
-const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
 const bgImage = Math.floor(Math.random() * 6) + 1;
 
 function Main() {
@@ -16,10 +16,7 @@ function Main() {
   const { data, error, status } = useQuery({
     enabled: Boolean(searchValue.length >= 2),
     queryKey: ['autocomplete', debouncedValue],
-    queryFn: () =>
-      fetch(
-        `https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${debouncedValue}`,
-      ).then((response) => response.json()),
+    queryFn: () => getAutocomplete(debouncedValue),
   });
 
   return (

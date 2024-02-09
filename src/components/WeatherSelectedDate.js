@@ -2,45 +2,43 @@ import SelectedDayCard from './SelectedDayCard';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import DayNavigationBar from './DayNavigationBar';
-const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
+import { getDailyForecasts } from '../api';
 
 function WeatherSelectedDate() {
   const { id, index } = useParams();
 
   const { data } = useQuery({
     queryKey: ['dailyForecasts', id],
-    queryFn: () =>
-      fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}/?apikey=${API_KEY}`,
-      ).then((response) => response.json()),
+    queryFn: () => getDailyForecasts(id),
+    select: (data) => {
+      return {
+        date: data[index].Date,
+        dayIconNumber: data[index].Day.Icon,
+        dayIconPhrase: data[index].Day.IconPhrase,
+        dayTemperature: data[index].Temperature.Maximum.Value,
+        nightTemperature: data[index].Temperature.Minimum.Value,
+        nightIconNumber: data[index].Night.Icon,
+        nightIconPhrase: data[index].Night.IconPhrase,
+      };
+    },
   });
-
-  const formattedData = {
-    date: data.DailyForecasts[index].Date,
-    dayIconNumber: data.DailyForecasts[index].Day.Icon,
-    nightIconNumber: data.DailyForecasts[index].Night.Icon,
-    dayIconPhrase: data.DailyForecasts[index].Day.IconPhrase,
-    nightIconPhrase: data.DailyForecasts[index].Night.IconPhrase,
-    dayTemperature: data.DailyForecasts[index].Temperature.Maximum.Value,
-    nightTemperature: data.DailyForecasts[index].Temperature.Minimum.Value,
-  };
 
   return (
     <>
-      <DayNavigationBar index={index} date={formattedData.date} />
+      <DayNavigationBar index={index} date={data.date} />
       <SelectedDayCard
         cardName={'Day'}
-        iconNumber={formattedData.dayIconNumber}
-        tempValue={formattedData.dayTemperature}
-        weatherText={formattedData.dayIconPhrase}
-        date={formattedData.date}
+        iconNumber={data.dayIconNumber}
+        tempValue={data.dayTemperature}
+        weatherText={data.dayIconPhrase}
+        date={data.date}
       />
       <SelectedDayCard
         cardName={'Night'}
-        iconNumber={formattedData.nightIconNumber}
-        tempValue={formattedData.nightTemperature}
-        weatherText={formattedData.nightIconPhrase}
-        date={formattedData.date}
+        iconNumber={data.nightIconNumber}
+        tempValue={data.nightTemperature}
+        weatherText={data.nightIconPhrase}
+        date={data.date}
       />
     </>
   );

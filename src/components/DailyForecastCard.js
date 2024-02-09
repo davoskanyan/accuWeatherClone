@@ -3,30 +3,28 @@ import { dateToWeekdayDayMonth } from '../utils';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
+import { getDailyForecasts } from '../api';
 
 function DailyForecastCard({ cardId }) {
   const { id } = useParams();
 
   const { data } = useQuery({
     queryKey: ['dailyForecasts', id],
-    queryFn: () =>
-      fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}/?apikey=${API_KEY}`,
-      ).then((response) => response.json()),
+    queryFn: () => getDailyForecasts(id),
+    select: (data) => {
+      return {
+        date: data[cardId].Date,
+        dayIconNumber: data[cardId].Day.Icon,
+        dayIconPhrase: data[cardId].Day.IconPhrase,
+        dayTemperature: data[cardId].Temperature.Maximum.Value,
+        nightTemperature: data[cardId].Temperature.Minimum.Value,
+      };
+    },
   });
 
   const [isHovering, setIsHovering] = useState(false);
 
-  const formattedData = {
-    date: data.DailyForecasts[cardId].Date,
-    dayIconNumber: data.DailyForecasts[cardId].Day.Icon,
-    dayIconPhrase: data.DailyForecasts[cardId].Day.IconPhrase,
-    dayTemperature: data.DailyForecasts[cardId].Temperature.Maximum.Value,
-    nightTemperature: data.DailyForecasts[cardId].Temperature.Minimum.Value,
-  };
-
-  const formattedDate = dateToWeekdayDayMonth(formattedData.date);
+  const formattedDate = dateToWeekdayDayMonth(data.date);
 
   function handleMouseOver() {
     setIsHovering(true);
@@ -57,12 +55,12 @@ function DailyForecastCard({ cardId }) {
             <div className="flex flex-row items-center ">
               <img
                 className={`h-[62px] w-[62px] mr-8`}
-                src={`https://www.accuweather.com/images/weathericons/${formattedData.dayIconNumber}.svg`}
+                src={`https://www.accuweather.com/images/weathericons/${data.dayIconNumber}.svg`}
               />
               <p className="text-[55px]">
-                {formattedData.dayTemperature}°
+                {data.dayTemperature}°
                 <span className="opacity-[0.6] text-[25px]">
-                  / {formattedData.nightTemperature}°
+                  / {data.nightTemperature}°
                 </span>
               </p>
             </div>
@@ -76,9 +74,7 @@ function DailyForecastCard({ cardId }) {
             ''
           )}
         </div>
-        <p className="align-bottom text-[18px]">
-          {formattedData.dayIconPhrase}
-        </p>
+        <p className="align-bottom text-[18px]">{data.dayIconPhrase}</p>
       </Link>
     </div>
   );

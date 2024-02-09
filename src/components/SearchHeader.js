@@ -2,8 +2,6 @@ import React from 'react';
 // import { useParams } from 'react-router-dom';
 // import { useQuery } from '@tanstack/react-query';
 
-// const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
-
 function SearchHeader() {
   // const { id } = useParams();
   //

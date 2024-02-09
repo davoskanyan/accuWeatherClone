@@ -2,28 +2,25 @@ import { useParams } from 'react-router-dom';
 import DailyForecastCard from '../components/DailyForecastCard';
 import { dateIntervalWithWords } from '../utils';
 import { useQuery } from '@tanstack/react-query';
-const API_KEY = process.env.REACT_APP_ACCUWEATHER_API_KEY;
+import { getDailyForecasts } from '../api';
 
 function DailyForecast() {
   const { id } = useParams();
 
   const { data, error, status } = useQuery({
     queryKey: ['dailyForecasts', id],
-    queryFn: () =>
-      fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}/?apikey=${API_KEY}`,
-      ).then((response) => response.json()),
+    queryFn: () => getDailyForecasts(id),
   });
 
+  console.log('datadaily:', data);
   if (status !== 'success') {
     return <span>loading...</span>;
   } else if (status === 'error') {
     return <span>{error}</span>;
   }
 
-  const dailyForecasts = data.DailyForecasts;
-  const startDate = data.DailyForecasts[0].Date;
-  const endDate = data.DailyForecasts[4].Date;
+  const startDate = data[0].Date;
+  const endDate = data[4].Date;
 
   const dateIntervalObj = dateIntervalWithWords(startDate, endDate);
 
@@ -32,8 +29,7 @@ function DailyForecast() {
       <p className="m-3 pl-5">
         {dateIntervalObj.startDate} - {dateIntervalObj.endDate}
       </p>
-      {dailyForecasts.map((forecast, id) => (
-        // TODO: reduce props
+      {data.map((forecast, id) => (
         <DailyForecastCard cardId={id} key={forecast.Date} />
       ))}
     </div>
