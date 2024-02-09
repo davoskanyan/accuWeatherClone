@@ -3,9 +3,9 @@ import RecentLocationCard from './RecentLocationCard';
 import { Link } from 'react-router-dom';
 
 function RecentSearch() {
-  const recentLoactionsStr = localStorage.getItem('recentLocation');
-  const recentLocations = recentLoactionsStr
-    ? JSON.parse(recentLoactionsStr)
+  const recentLocationsStr = localStorage.getItem('recentLocation');
+  const recentLocations = recentLocationsStr
+    ? JSON.parse(recentLocationsStr)
     : [];
 
   return (

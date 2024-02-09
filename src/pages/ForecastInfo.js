@@ -1,9 +1,9 @@
 import Header from '../components/Header';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import SearchHeader from '../components/SearchHeader';
 import { getCurrentConditions } from '../api';
+import { useStoreRecentLocation } from '../custom-hooks/useStoreRecentLocation';
 
 const activeStyle = ({ isActive }) => {
   return {
@@ -13,41 +13,20 @@ const activeStyle = ({ isActive }) => {
     borderBottom: isActive ? '1px solid #f05514' : '',
   };
 };
-function ForecastInfo() {
-  const { id, city } = useParams();
 
-  // TODO: extract
+function ForecastInfo() {
+  const { id } = useParams();
+
   const { data, error, status } = useQuery({
     queryKey: ['currentCondition', id],
     queryFn: () => getCurrentConditions(id),
   });
 
-  // TODO: extract
-  useEffect(() => {
-    const recentLocationsStr = localStorage.getItem('recentLocation');
-    const recentLocations = recentLocationsStr
-      ? JSON.parse(recentLocationsStr)
-      : [];
-
-    const recentLocationsFiltered = recentLocations.filter(
-      (storageCity) => storageCity.cityId !== id,
-    );
-    localStorage.setItem(
-      'recentLocation',
-      JSON.stringify(
-        [{ cityId: id, cityName: city }, ...recentLocationsFiltered].slice(
-          0,
-          3,
-        ),
-      ),
-    );
-  }, [id, city]);
+  useStoreRecentLocation();
 
   if (status !== 'success') {
     return <span>loading...</span>;
   }
-
-  // TODO: move to fetch
 
   return (
     <div className="bg-[#EBEBEB]">
