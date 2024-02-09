@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { dateToWeekdayDayMonth } from '../utils';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { Link, useParams } from 'react-router-dom';
@@ -13,7 +12,7 @@ function DailyForecastCard({ cardId }) {
     queryFn: () => getDailyForecasts(id),
     select: (data) => {
       return {
-        date: data[cardId].Date,
+        date: dateToWeekdayDayMonth(data[cardId].Date),
         dayIconNumber: data[cardId].Day.Icon,
         dayIconPhrase: data[cardId].Day.IconPhrase,
         dayTemperature: data[cardId].Temperature.Maximum.Value,
@@ -22,33 +21,17 @@ function DailyForecastCard({ cardId }) {
     },
   });
 
-  const [isHovering, setIsHovering] = useState(false);
-
-  const formattedDate = dateToWeekdayDayMonth(data.date);
-
-  function handleMouseOver() {
-    setIsHovering(true);
-  }
-
-  function handleMouseOut() {
-    setIsHovering(false);
-  }
-
   return (
     <div className="bg-white shadow-sm p-[12px] w-[632px] m-8">
       <Link to={`selectedDay/${cardId}`}>
-        <div
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
-          className="flex flex-row gap-2 items-center justify-between hover:cursor-pointer"
-        >
+        <div className="flex flex-row gap-2 items-center justify-between group group-hover:cursor-pointer">
           <div className="flex flex-row items-center">
             <div className="flex flex-col mr-5">
               <p className="text-{14px}">
-                {formattedDate.weekDayOfDate.slice(0, 3)}
+                {data.date.weekDayOfDate.slice(0, 3)}
               </p>
               <p className="opacity-[0.6] text-{14px}">
-                {formattedDate.month}/{formattedDate.day}
+                {data.date.month}/{data.date.day}
               </p>
             </div>
 
@@ -66,13 +49,10 @@ function DailyForecastCard({ cardId }) {
             </div>
           </div>
           {/*TODO: handle with css*/}
-          {isHovering ? (
-            <div>
-              <FaArrowRightLong />
-            </div>
-          ) : (
-            ''
-          )}
+
+          <div className="invisible group-hover:visible">
+            <FaArrowRightLong />
+          </div>
         </div>
         <p className="align-bottom text-[18px]">{data.dayIconPhrase}</p>
       </Link>
