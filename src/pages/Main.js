@@ -1,24 +1,11 @@
 import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
 import Search from '../components/Search';
 import RecentSearch from '../components/RecentSearch';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
-import { useQuery } from '@tanstack/react-query';
-import { getAutocomplete } from '../api';
 
 const bgImage = Math.floor(Math.random() * 6) + 1;
 
 function Main() {
-  const [searchValue, setSearchValue] = useState('');
-  const debouncedValue = useDebouncedValue(searchValue);
-
-  const { data, error, status } = useQuery({
-    enabled: Boolean(searchValue.length >= 2),
-    queryKey: ['autocomplete', debouncedValue],
-    queryFn: () => getAutocomplete(debouncedValue),
-  });
-
   return (
     <div
       style={{
@@ -33,14 +20,8 @@ function Main() {
           <img className="h-fit" src={accuWeatherLogo} />
         </div>
       </Link>
-      <div className="flex flex-col items-center justify-around h-full w-full">
-        <Search
-          value={searchValue}
-          onChange={setSearchValue}
-          error={error}
-          isLoading={status === 'isLoading'}
-          searchOptions={searchValue.length <= 2 ? [] : data}
-        />
+      <div className="flex flex-col items-center justify-around h-full w-[532px] mx-auto ">
+        <Search />
         <RecentSearch />
       </div>
     </div>

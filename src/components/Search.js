@@ -2,12 +2,26 @@ import { Popover, TextField } from '@radix-ui/themes';
 import SearchIcon from '../icons/searchIcon.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
+import { useQuery } from '@tanstack/react-query';
+import { getAutocomplete } from '../api';
 
-function Search({ onChange, value, error, isLoading, searchOptions }) {
+function Search() {
+  const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
 
+  const debouncedValue = useDebouncedValue(value);
+
+  const { data, error, isLoading } = useQuery({
+    enabled: Boolean(value.length >= 2),
+    queryKey: ['autocomplete', debouncedValue],
+    queryFn: () => getAutocomplete(debouncedValue),
+  });
+
+  const searchOptions = value.length <= 2 ? [] : data;
+
   function handleInputChange(e) {
-    onChange(e.target.value);
+    setValue(e.target.value);
   }
 
   function handleBlur(e) {
@@ -24,7 +38,7 @@ function Search({ onChange, value, error, isLoading, searchOptions }) {
     <div className="flex justify-center w-full flex-col items-center">
       <Popover.Root className="z-0 " open>
         <Popover.Trigger>
-          <TextField.Root className="h-11 border-white w-[532px] z-40 shadow-none outline-0">
+          <TextField.Root className="h-11 border-white w-full z-40 shadow-none outline-0">
             <TextField.Slot>
               <img alt="searchIcon" src={SearchIcon} height="16" width="16" />
             </TextField.Slot>
