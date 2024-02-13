@@ -7,7 +7,7 @@ import { getDailyForecasts } from '../api';
 function WeatherSelectedDate() {
   const { id, index } = useParams();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['dailyForecasts', id],
     queryFn: () => getDailyForecasts(id),
     select: (data) => {
@@ -22,6 +22,10 @@ function WeatherSelectedDate() {
       };
     },
   });
+
+  if (isLoading) {
+    return 'Loading...';
+  }
 
   return (
     <>

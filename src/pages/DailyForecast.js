@@ -12,17 +12,13 @@ function DailyForecast() {
     queryFn: () => getDailyForecasts(id),
   });
 
-  console.log('datadaily:', data);
   if (status !== 'success') {
     return <span>loading...</span>;
   } else if (status === 'error') {
     return <span>{error}</span>;
   }
 
-  const startDate = data[0].Date;
-  const endDate = data[4].Date;
-
-  const dateIntervalObj = dateIntervalWithWords(startDate, endDate);
+  const dateIntervalObj = dateIntervalWithWords(data[0].Date, data[4].Date);
 
   return (
     <div>

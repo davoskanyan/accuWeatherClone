@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Main from './pages/Main';
 import './index.css';
 import ForecastInfo from './pages/ForecastInfo';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import PageNotFound from './pages/PageNotFound';
 import DailyForecast from './pages/DailyForecast';
 import ForecastCard from './components/ForecastCard';
@@ -18,8 +18,7 @@ function App() {
           <Route index element={<Main />} />
 
           <Route path=":id/:city" element={<ForecastInfo />}>
-            {/* TODO: redirect to today-forecast */}
-            <Route index element={<ForecastCard />} />
+            <Route index element={<Navigate to="today-forecast" replace />} />
 
             <Route path="today-forecast" element={<ForecastCard />} />
 

@@ -12,17 +12,13 @@ body {
 
 }
 
-.rt-PopperContent, .rt-BaseMenuContent[data-state='open'] {
+.rt-PopperContent[data-state='open'], .rt-BaseMenuContent[data-state='open'], .data-radix-popper-content-wrapper {
   border-top: 3px solid rgb(240, 85, 20) ;
-  border-radius: 0 0 3px 3px;
+  border-radius: 0 0 4px 4px;
 }
 
-.rt-TextFieldChrome[data-state='closed'] {
-  border-radius: 3px 3px 0 0 !important;
 
-}
-.rt-TextFieldRoot
-{
+.rt-TextFieldRoot {
   z-index: 40 !important;
 }
 
@@ -33,4 +29,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.data-radix-popper-content-wrapper {
+  border-radius: 0px 0px 3px 3px !important;
 }

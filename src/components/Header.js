@@ -1,7 +1,7 @@
 import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
 import { Link, useParams } from 'react-router-dom';
 import Degree from './Degree';
-import SearchHeader from './SearchHeader';
+import Search from './Search';
 
 function Header({ iconNumber, tempUnit, tempValue }) {
   const { city } = useParams();
@@ -33,8 +33,8 @@ function Header({ iconNumber, tempUnit, tempValue }) {
           />
         </div>
       </div>
-      <div className="flex items-center mr-[300px] ">
-        <SearchHeader />
+      <div className="flex items-center mr-[30px] ">
+        <Search />
       </div>
     </div>
   );

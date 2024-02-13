@@ -10,15 +10,13 @@ function DailyForecastCard({ cardId }) {
   const { data } = useQuery({
     queryKey: ['dailyForecasts', id],
     queryFn: () => getDailyForecasts(id),
-    select: (data) => {
-      return {
-        date: dateToWeekdayDayMonth(data[cardId].Date),
-        dayIconNumber: data[cardId].Day.Icon,
-        dayIconPhrase: data[cardId].Day.IconPhrase,
-        dayTemperature: data[cardId].Temperature.Maximum.Value,
-        nightTemperature: data[cardId].Temperature.Minimum.Value,
-      };
-    },
+    select: (data) => ({
+      date: dateToWeekdayDayMonth(data[cardId].Date),
+      dayIconNumber: data[cardId].Day.Icon,
+      dayIconPhrase: data[cardId].Day.IconPhrase,
+      dayTemperature: data[cardId].Temperature.Maximum.Value,
+      nightTemperature: data[cardId].Temperature.Minimum.Value,
+    }),
   });
 
   return (
@@ -48,7 +46,6 @@ function DailyForecastCard({ cardId }) {
               </p>
             </div>
           </div>
-          {/*TODO: handle with css*/}
 
           <div className="invisible group-hover:visible">
             <FaArrowRightLong />
