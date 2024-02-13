@@ -56,7 +56,7 @@ function Search() {
 
         <Popover.Content
           sideOffset={-1}
-          className={`search-content-dialog w-[520px] min-h-[44px] !p-0 ${open ? 'visible' : 'invisible'}`}
+          className={`search-content-dialog w-full min-h-[44px] !p-0 ${open ? 'visible' : 'invisible'}`}
         >
           <ul autoFocus={false} className="flex flex-col   m-0">
             {error && <li>{error}</li>}

@@ -13,7 +13,12 @@ function DayNavigationBar({ index, date }) {
        w-[632px]"
     >
       {!firstDay ? (
-        <Link to={`../selectedDay/${Number(index) - 1}`}>{'<'}</Link>
+        <Link
+          className="font-bold cursor-pointer self-start"
+          to={`../selectedDay/${Number(index) - 1}`}
+        >
+          {'<'}
+        </Link>
       ) : (
         <div />
       )}
@@ -23,7 +28,7 @@ function DayNavigationBar({ index, date }) {
       {!lastDay ? (
         <Link
           to={`../selectedDay/${Number(index) + 1}`}
-          className="font-bold self-end"
+          className="font-bold cursor-pointer self-end"
         >
           {'>'}
         </Link>

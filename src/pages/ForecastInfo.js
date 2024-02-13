@@ -1,7 +1,6 @@
 import Header from '../components/Header';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import SearchHeader from '../components/SearchHeader';
 import { getCurrentConditions } from '../api';
 import { useStoreRecentLocation } from '../custom-hooks/useStoreRecentLocation';
 
@@ -39,8 +38,8 @@ function ForecastInfo() {
             tempUnit={data.tempUnit}
             iconNumber={data.iconNumber}
           />
-          <div className=" h-[100vh] mx-80">
-            <ul className="flex flex-row justify-start text-[16px] border-b-[1px] border-b-gray-400 pb-0 text-[#666c72] h-[45px] items-center">
+          <div className="h-[100vh] w-[50%] mx-auto">
+            <ul className="flex flex-row justify-start text-[16px] border-b-[1px] uppercase border-b-gray-400 pb-0 text-[#666c72] h-[45px] items-center">
               <NavLink style={activeStyle} to="today-forecast">
                 <li>Today</li>
               </NavLink>
@@ -49,7 +48,6 @@ function ForecastInfo() {
               </NavLink>
             </ul>
             <Outlet />
-            <SearchHeader />
           </div>
         </div>
       )}
