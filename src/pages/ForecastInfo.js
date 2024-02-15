@@ -38,7 +38,7 @@ function ForecastInfo() {
             tempUnit={data.tempUnit}
             iconNumber={data.iconNumber}
           />
-          <div className="h-[100vh] w-[50%] mx-auto">
+          <div className="h-[150vh] w-[50%] mx-auto">
             <ul className="flex flex-row justify-start text-[16px] border-b-[1px] uppercase border-b-gray-400 pb-0 text-[#666c72] h-[45px] items-center">
               <NavLink style={activeStyle} to="today-forecast">
                 <li>Today</li>

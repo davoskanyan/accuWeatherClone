@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import { useDebouncedValue } from '../custom-hooks/useDebouncedValue';
 import { useQuery } from '@tanstack/react-query';
 import { getAutocomplete } from '../api';
+import CurrentPositionBtn from './CurrentPositionBtn';
 
 function Search() {
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
-
   const debouncedValue = useDebouncedValue(value);
 
   const { data, error, isLoading } = useQuery({
@@ -20,18 +20,10 @@ function Search() {
 
   const searchOptions = value.length <= 2 ? [] : data;
 
-  function handleInputChange(e) {
-    setValue(e.target.value);
-  }
-
   function handleBlur(e) {
     if (!e.relatedTarget?.closest('.search-content-dialog')) {
       setOpen(false);
     }
-  }
-
-  function handleFocus() {
-    setOpen(true);
   }
 
   return (
@@ -48,17 +40,21 @@ function Search() {
               placeholder="Search your City"
               value={value}
               onBlur={handleBlur}
-              onFocus={handleFocus}
-              onChange={(e) => handleInputChange(e)}
+              onFocus={() => setOpen(true)}
+              onChange={(e) => setValue(e.target.value)}
             />
           </TextField.Root>
         </Popover.Trigger>
 
         <Popover.Content
           sideOffset={-1}
-          className={`search-content-dialog w-full min-h-[44px] !p-0 ${open ? 'visible' : 'invisible'}`}
+          className={`search-content-dialog w-full min-h-[44px] !p-0 ${
+            open ? 'visible' : 'invisible'
+          }`}
         >
           <ul autoFocus={false} className="flex flex-col   m-0">
+            <CurrentPositionBtn />
+
             {error && <li>{error}</li>}
             {isLoading ? (
               <li>Loading...</li>

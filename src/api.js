@@ -15,6 +15,15 @@ export function getDailyForecasts(id) {
       return data.DailyForecasts;
     });
 }
+export function getCitybyGeolocation(latitude, longitude) {
+  return fetch(
+    `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${API_KEY}&q=${latitude},${longitude}`,
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      return { key: data.Key, city: data.LocalizedName };
+    });
+}
 
 export function getCurrentConditions(id) {
   return fetch(
