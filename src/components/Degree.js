@@ -8,7 +8,7 @@ function Degree({ tempValue, unit, unitPosition }) {
             left: { unitPosition },
             fontSize: '50%',
           }}
-          className={`opacity-50 relative `}
+          className="opacity-50 relative"
         >
           {unit}
         </span>

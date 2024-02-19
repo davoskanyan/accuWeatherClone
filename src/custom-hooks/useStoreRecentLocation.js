@@ -5,6 +5,10 @@ export function useStoreRecentLocation() {
   const { id, city } = useParams();
 
   useEffect(() => {
+    if (!id || !city) {
+      return;
+    }
+
     const recentLocationsStr = localStorage.getItem('recentLocation');
     const recentLocations = recentLocationsStr
       ? JSON.parse(recentLocationsStr)

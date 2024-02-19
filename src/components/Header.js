@@ -2,9 +2,24 @@ import accuWeatherLogo from '../icons/accuWeatherLogo.svg';
 import { Link, useParams } from 'react-router-dom';
 import Degree from './Degree';
 import Search from './Search';
+import { useQuery } from '@tanstack/react-query';
+import { getAutocomplete, getCurrentConditions } from '../api';
 
-function Header({ iconNumber, tempUnit, tempValue }) {
-  const { city } = useParams();
+function Header() {
+  const { city, id } = useParams();
+
+  const { data: autocomplete, status: autocompleteStatus } = useQuery({
+    queryKey: ['autocomplete', city],
+    queryFn: () => getAutocomplete(city),
+  });
+
+  const { data: currentCondition, status: currentConditionStatus } = useQuery({
+    queryKey: ['currentCondition', id],
+    queryFn: () => getCurrentConditions(id),
+  });
+
+  const isSuccess =
+    autocompleteStatus === 'success' && currentConditionStatus === 'success';
 
   return (
     <div className="h-[62px]  text-white flex flex-row bg-[#1f1f1f] ">
@@ -19,19 +34,23 @@ function Header({ iconNumber, tempUnit, tempValue }) {
           </Link>
 
           <div className="flex flex-row h-fit justify-around gap-3 font-bold items-center">
-            <h1 className="mx-3">
-              {city}, {city}
-            </h1>
-            <Degree
-              iconNumber={iconNumber}
-              unit={tempUnit}
-              tempValue={tempValue}
-              unitPosition={'-12px'}
-            />
-            <img
-              className={`h-[24px] w-[24px]`}
-              src={`https://www.accuweather.com/images/weathericons/${iconNumber}.svg`}
-            />
+            {isSuccess && (
+              <>
+                <h1 className="mx-3">
+                  {city}, {autocomplete[0].AdministrativeArea.LocalizedName}
+                </h1>
+                <Degree
+                  iconNumber={currentCondition.iconNumber}
+                  unit={currentCondition.tempUnit}
+                  tempValue={currentCondition.tempValue}
+                  unitPosition={'-12px'}
+                />
+                <img
+                  className={`h-[24px] w-[24px]`}
+                  src={`https://www.accuweather.com/images/weathericons/${currentCondition.iconNumber}.svg`}
+                />
+              </>
+            )}
           </div>
         </div>
         <div className="w-1/3">

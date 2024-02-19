@@ -8,7 +8,13 @@ import DailyForecast from './pages/DailyForecast';
 import ForecastCard from './components/ForecastCard';
 import WeatherSelectedDate from './components/WeatherSelectedDate';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 function App() {
   return (

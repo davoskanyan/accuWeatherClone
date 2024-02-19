@@ -7,10 +7,19 @@ import { TimeFormattingFromString } from '../utils';
 function ForecastCard() {
   const { id } = useParams();
 
-  const { data } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['currentCondition', id],
     queryFn: () => getCurrentConditions(id),
   });
+
+  if (isLoading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return 'Error...';
+  }
+
   const formattedTime = TimeFormattingFromString(data.localObservationDateTime);
 
   return (

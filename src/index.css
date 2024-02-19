@@ -9,16 +9,18 @@
   font-style: normal;
 }
 
-body {
-  margin: 0;
-  font-family:  "Dosis", 'MySolis', 'Arial', 'Roboto', 'Helvetica Neue', 'Arial', 'Helvetica',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  font-family: 'MySolis', 'Roboto', 'Helvetica Neue', 'Arial', 'Helvetica', sans-serif;
 }
 
 * {
   font-family: inherit;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .rt-PopperContent[data-state='open'], .rt-BaseMenuContent[data-state='open'], .data-radix-popper-content-wrapper {

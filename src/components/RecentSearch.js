@@ -10,7 +10,7 @@ function RecentSearch() {
 
   return (
     <Box className="w-[532px]">
-      <Text className="text-[12px] uppercase tracking-[.5em]  font-medium leading-[1.33em] font-[mySolis]">
+      <Text className="text-[12px] uppercase tracking-[.5px] font-medium leading-[1.33em]">
         Recent Locations
       </Text>
       <Grid columns="3" gap="3" width="auto" className="my-4">

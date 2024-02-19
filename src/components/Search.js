@@ -26,6 +26,9 @@ function Search() {
     }
   }
 
+  if (error) {
+    return <div>Error fetching data</div>;
+  }
   return (
     <div className="flex justify-center w-full flex-col items-center">
       <Popover.Root className="z-0 " open>

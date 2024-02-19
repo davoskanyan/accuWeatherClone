@@ -1,7 +1,5 @@
 import Header from '../components/Header';
-import { NavLink, Outlet, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getCurrentConditions } from '../api';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useStoreRecentLocation } from '../custom-hooks/useStoreRecentLocation';
 
 const activeStyle = ({ isActive }) => {
@@ -14,43 +12,24 @@ const activeStyle = ({ isActive }) => {
 };
 
 function ForecastInfo() {
-  const { id } = useParams();
-
-  const { data, error, status } = useQuery({
-    queryKey: ['currentCondition', id],
-    queryFn: () => getCurrentConditions(id),
-  });
-
   useStoreRecentLocation();
-
-  if (status !== 'success') {
-    return <span>loading...</span>;
-  }
 
   return (
     <div className="bg-[#EBEBEB]">
-      {status === 'isLoading' && <div>Loading...</div>}
-      {status === 'error' && <div>{error}</div>}
-      {status === 'success' && (
-        <div>
-          <Header
-            tempValue={data.tempValue}
-            tempUnit={data.tempUnit}
-            iconNumber={data.iconNumber}
-          />
-          <div className="h-[150vh] w-[50%] mx-auto">
-            <ul className="flex flex-row justify-start text-[16px] border-b-[1px] uppercase border-b-gray-400 pb-0 text-[#666c72] h-[45px] items-center">
-              <NavLink style={activeStyle} to="today-forecast">
-                <li>Today</li>
-              </NavLink>
-              <NavLink style={activeStyle} to="daily-forecast">
-                <li>Daily</li>
-              </NavLink>
-            </ul>
-            <Outlet />
-          </div>
+      <div>
+        <Header />
+        <div className="h-[150vh] w-[50%] mx-auto">
+          <ul className="flex flex-row justify-start text-[16px] border-b-[1px] uppercase border-b-gray-400 pb-0 text-[#666c72] h-[45px] items-center">
+            <NavLink style={activeStyle} to="today-forecast">
+              <li>Today</li>
+            </NavLink>
+            <NavLink style={activeStyle} to="daily-forecast">
+              <li>Daily</li>
+            </NavLink>
+          </ul>
+          <Outlet />
         </div>
-      )}
+      </div>
     </div>
   );
 }
